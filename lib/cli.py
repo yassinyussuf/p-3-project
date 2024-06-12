@@ -13,6 +13,8 @@ def create_tables():
                    id INTEGER PRIMARY KEY AUTOINCREMENT,
                    first_name TEXT NOT NULL,
                    last_name TEXT NOT NULL,
+                   email TEXT NOT NULL,
+                   mobile_number TEXT NOT NULL,
                    department_id INTEGER,
                    FOREIGN KEY (department_id) REFERENCES departments(id)
     )''')
@@ -21,6 +23,10 @@ def create_tables():
                    id INTEGER PRIMARY KEY AUTOINCREMENT,
                    first_name TEXT NOT NULL,
                    last_name TEXT NOT NULL,
+                   email TEXT NOT NULL,
+                   mobile_number TEXT NOT NULL,
+                   hire_date TEXT NOT NULL,
+                   salary TEXT NOT NULL,
                    department_id INTEGER,
                    manager_id INTEGER,
                    FOREIGN KEY (department_id) REFERENCES departments(id),
@@ -42,15 +48,15 @@ class CompanyDB:
         self.connection.commit()
         print("Department added successfully.")
 
-    def add_manager(self, first_name, last_name, department_id):
-        self.cursor.execute('INSERT INTO managers (first_name, last_name, department_id) VALUES (?,?,?)',
-                            (first_name, last_name, department_id))
+    def add_manager(self, first_name, last_name,email,mobile_number, department_id):
+        self.cursor.execute('INSERT INTO managers (first_name, last_name,email,mobile_number, department_id) VALUES (?,?,?,?,?)',
+                            (first_name, last_name,email,mobile_number, department_id))
         self.connection.commit()
         print("Manager added successfully.")
 
-    def add_employee(self, first_name, last_name, department_id, manager_id):
-        self.cursor.execute('INSERT INTO employees (first_name, last_name, department_id, manager_id) VALUES (?,?,?,?)',
-                            (first_name, last_name, department_id, manager_id))
+    def add_employee(self, first_name, last_name, email, mobile_number,hire_date,salary, department_id, manager_id):
+        self.cursor.execute('INSERT INTO employees (first_name, last_name, email , mobile_number,hire_date,salary,department_id, manager_id) VALUES (?,?,?,?,?,?,?,?)',
+                            (first_name, last_name, email,mobile_number,hire_date,salary, department_id, manager_id))
         self.connection.commit()
         print("Employee added successfully.")
 
@@ -148,18 +154,24 @@ def main():
         elif choice == '2':
             first_name = input("Enter Manager's first name: ")
             last_name = input("Enter Manager's last name: ")
+            email = input("Enter Manager's email: ")
+            mobile_number = input("Enter Manager's mobile_number: ")
             department_id = int(input("Enter Department's ID: "))
             if db.department_exists(department_id):
-                db.add_manager(first_name, last_name, department_id)
+                db.add_manager(first_name, last_name,email,mobile_number, department_id)
             else:
                 print("Department does not exist.")
         elif choice == '3':
             first_name = input("Enter Employee's first name: ")
             last_name = input("Enter Employee's last name: ")
+            email = input("Enter Employees email: ")
+            mobile_number = input("Enter Employees mobile_number: ")
+            hire_date = input("Enter Employees hire_date:")
+            salary = input("Enter Employees salary: ")
             department_id = int(input("Enter Department's ID: "))
             manager_id = int(input("Enter Manager's ID: "))
             if db.department_exists(department_id) and db.manager_exists(manager_id):
-                db.add_employee(first_name, last_name, department_id, manager_id)
+                db.add_employee(first_name, last_name, email ,mobile_number,hire_date,salary,department_id, manager_id)
             else:
                 print("Department or Manager does not exist.")
         elif choice == '4':
